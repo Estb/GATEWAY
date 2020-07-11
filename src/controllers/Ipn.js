@@ -32,6 +32,7 @@ exports.ipn = (req, res, next) =>{
     } else {
       
       res.locals.status = req.body.status
+      res.locals.statustext = req.body.status_text
       res.locals.txn_id = req.body.txn_id
 
       res.end()

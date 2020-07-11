@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const database = require('../database/database').default.default
+const database = require('../database/database')
 
 const Transactions = database.define('transactions', {
 
@@ -8,10 +8,6 @@ const Transactions = database.define('transactions', {
     autoIncrement: true,
     primaryKey: true,
     type: Sequelize.INTEGER
-  },
-  txnid:{
-    allowNull: false,
-    type: Sequelize.STRING(255)
   },
   merchantId: {
     allowNull: false,
@@ -40,6 +36,11 @@ const Transactions = database.define('transactions', {
   currency2:{
     allowNull: false,
     type:Sequelize.STRING
+  },
+  received:{
+    allowNull: true,
+    type:Sequelize.INTEGER,
+    defaultValue: '0'
   },
   status:{
     allowNull: false,

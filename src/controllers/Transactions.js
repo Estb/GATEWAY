@@ -11,28 +11,15 @@ const controller = require('./index')
 exports.updateTx = (req, res, next) => {
  
   const status = res.locals.status
+  const  statustext = res.locals.statustext
   const txn_id = res.locals.txn_id
-
-  if (status){
-
-    if(status==0){
-      var statustext = "Waiting for buyer funds..."
-    } else if(status == -1) {
-      var statustext = "Cancelled / Timed Out"
-    }else if(status == -2) {
-      var statustext = "Refund or Reversal"
-    }else if (status == 1){
-      var statustext = " We have confirmed coin reception from the buyer"
-    } else if (status == 100){
-      var statustext = "Complete"
-    }else {
-      var statustext = "Unknown"
-    }
+ 
+  if ( status & statustext & txn_id ){
 
   transactionsModels.findOne({txn_id, where: {txn_id:txn_id}})
     .then(tx => {
       if(tx) {
-        transactionsModels.update(
+            Models.update(
               {
                 status : status,
                 statustext:statustext
@@ -50,7 +37,7 @@ exports.updateTx = (req, res, next) => {
     .catch (error => next (error))
 
 } else {
-  console.log(status)
+  console.log("mising datos")
   }
 }
 
@@ -86,7 +73,7 @@ exports.createTx = (req, res, next ) => {
     .then((transaction)=>{
       const trx = {
         amount2 : transaction.amount,
-        txn_id : transaction.txn_id,
+        txn_id : makeid(20),
         address : transaction.address,
         confirms_needed : transaction.confirms_needed,
         timeout : transaction.timeout,
@@ -100,9 +87,8 @@ exports.createTx = (req, res, next ) => {
       const address = trx.address
       const confirms_needed = trx.confirms_needed
       const timeout = trx.timeout
-      const txnid = makeid(20)
+      const txn_id = trx.txn_id
       const amount2 = trx.amount2
-
   
       if(transaction) {
         merchantModels.findOne({where: {pubkey:pubkey}})
@@ -111,7 +97,6 @@ exports.createTx = (req, res, next ) => {
             const merchantId = merchants.merchantId
       
             transactionsModels.create({
-              txnid  : txnid,
               txn_id  : trx.txn_id,
               address : trx.address,
               amount1 : amount1,
@@ -129,7 +114,7 @@ exports.createTx = (req, res, next ) => {
               merchantId : merchantId
             })
           .then( () => {
-                res.status(201).send({txn_id:txnid, address:address, amount:amount2, confirms_needed:confirms_needed, timeout:timeout , statusCode: 201});        
+                res.status(201).send({txn_id:txn_id, address:address, amount:amount2, confirms_needed:confirms_needed, timeout:timeout , statusCode: 201});        
               })
           .catch((error) => next(error))
                 } else {
@@ -153,32 +138,20 @@ exports.createTx = (req, res, next ) => {
 
 exports.statusTx = (req, res, next) => {
 
-  const txnid = req.body.txn_id
+  const txn_id = req.body.txn_id
   const merchantId = req.param.merchantId
 
-  transactionsModels.findOne({txnid, where: {txnid:txnid, merchantId:merchantId}})
+  transactionsModels.findOne({txn_id, where: {txn_id:txn_id, merchantId:merchantId}})
   .then((transaction)=> {
     if(transaction){
-
-      var status = transaction.status
       
-      if(status==0){
+      if(transaction.status==0){
         var statustext = "Waiting for buyer funds..."
-      } else if(status == -1) {
-        var statustext = "Cancelled / Timed Out"
-      }else if(status == -2) {
-        var statustext = "Refund or Reversal"
-      }else if (status == 1){
-        var statustext = " We have confirmed coin reception from the buyer"
-      } else if (status == 100){
-        var statustext = "Complete"
-      }else {
-        var statustext = "Unknown"
-      }
+      } 
 
     var  tx= {}
 
-     tx[transaction.txnid] = {
+     tx[transaction.txn_id] = {
         time_created:transaction.createdAt,
         status:transaction.status,
         status_text:statustext, 
@@ -207,27 +180,22 @@ exports.listallTx = (req, res, next) => {
   .then((transactions)=> {
     if(transactions){
 
+ //     transactions.forEach(element => {
+
       for (let i = 0; i < transactions.length; i++){
 
-        var status = transactions[i].status
-      
-        if(status==0){
+        if(transactions.status==0){
+
           var statustext = "Waiting for buyer funds..."
-        } else if(status == -1) {
-          var statustext = "Cancelled / Timed Out"
-        }else if(status == -2) {
-          var statustext = "Refund or Reversal"
-        }else if (status == 1){
-          var statustext = " We have confirmed coin reception from the buyer"
-        } else if (status == 100){
-          var statustext = "Complete"
-        }else {
-          var statustext = "Unknown"
+  
+        } else {
+  
+          var statustext = "Waiting for buyer funds..."
+          
         }
 
-
         tx[i] = {
-          txn_id : transactions[i].txnid,
+          txn_id : transactions[i].txn_id,
           time_created:transactions[i].createdAt,
           status:transactions[i].status,
           status_text:statustext, 

@@ -1,9 +1,8 @@
 const http = require("http");
 const express = require('express')
 const Routes = require("./routes/index.js");
-const sequelize = require('./database/database').default.default
-const bodyParser = require('body-parser');
-require("dotenv-safe").config();
+const sequelize = require('./database/database')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -19,7 +18,7 @@ app.use(function(err, req, res, next) {
 
 app.set('port', process.env.PORT || 3002)
 
-sequelize.sync({force: false})
+sequelize.sync({force: true})
 .then(()=>{
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port' + app.get('port'))

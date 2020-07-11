@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const database = require('../database/database').default.default
+const database = require('../database/database')
 const Transactions = require('./Transactions')
 
 const Merchants = database.define('merchants', {
