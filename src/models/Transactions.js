@@ -47,10 +47,6 @@ const Transactions = database.define('transactions', {
     type: Sequelize.INTEGER,
     defaultValue: '0'
   },
-  statustext:{
-    allowNull: true,
-    type: Sequelize.STRING
-  },
   confirms_needed:{
     allowNull: false,
     type: Sequelize.INTEGER

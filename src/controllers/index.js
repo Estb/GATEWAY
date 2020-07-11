@@ -21,7 +21,6 @@ exports.verifyHmac = (req, res, next) => {
       hmac.update(result)
       const signature = hmac.digest('hex')
 
-
       if(signature != sign) {
         return res.status(401).send({ auth: false, message: 'Failed to authenticate HMAC.1' })
       } else {

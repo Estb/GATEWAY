@@ -12,9 +12,9 @@ const router = express.Router()
 
 router.post('/v1/transactions', controller.verifyHmac, transactions.createTx) // create transaction
 
-router.post('/v1/hmac/:privkey',transactions.hmac) // test hmac
+router.post('/v1/hmac',transactions.hmac) // test hmac
 
-router.post('/v1/transaction&status', controller.verifyHmac, transactions.statusTx) //  status transaction
+router.post('/v1/transaction&status', controller.verifyHmac, transactions.statusTx) // update transaction
 
 //router.post('/v1/transaction', controller.apikey, controller.verifyJWT, transactions.findone ) // find one transaction
 
@@ -47,7 +47,7 @@ router.post('/v1/merchant',controller.apikey, merchants.createMerchant) // Creat
 
 //IPN
 
-router.post('/v1/ipn', ipn.ipn, transactions.updateTx)
+router.post('/v1/ipn', ipn.ipn)
 
 router.get('/v1/ipn', function (req, res, next) {
   return res.end(`IPN Online`);

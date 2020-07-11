@@ -8,40 +8,6 @@ const merchantModels = require('../models/Merchants')
 const controller = require('./index')
 
 
-exports.updateTx = (req, res, next) => {
- 
-  const status = res.locals.status
-  const  statustext = res.locals.statustext
-  const txn_id = res.locals.txn_id
- 
-  if ( status & statustext & txn_id ){
-
-  transactionsModels.findOne({txn_id, where: {txn_id:txn_id}})
-    .then(tx => {
-      if(tx) {
-            Models.update(
-              {
-                status : status,
-                statustext:statustext
-              },
-              {where: {txn_id:txn_id}}
-            )
-            .then( () => { 
-              console.log("atualiza IPN cliente")
-            })
-            .catch (error => next (error))
-      } else {
-        console.log('Transaction not found');
-      }
-    })
-    .catch (error => next (error))
-
-} else {
-  console.log("mising datos")
-  }
-}
-
-
 exports.createTx = (req, res, next ) => {
 
   const amount1 = req.body.amount
@@ -53,7 +19,7 @@ exports.createTx = (req, res, next ) => {
   const item_number = 123456 // must be a unique nuber transacttion from bzlgateway
   const custom = "BZLGateway"
   const invoice = "BZLGateway"
-  const ipn_url = "http://167.86.90.70:3002/api/v1/ipn"
+  const ipn_url = "https://bzlcoin.org/ipn"
 
  if (amount1 >0 & currency1 != undefined & currency2 != undefined) {
    
@@ -131,7 +97,7 @@ exports.createTx = (req, res, next ) => {
 
 
   } else {
-    res.status(500).send({sucess: false, message: 'Amount, currency1 y currency2 they are required and cannot be empty' , statusCode: 500})
+    res.status(500).send({sucess: false, message: 'error' , statusCode: 500})
   }
 }
 
@@ -146,9 +112,14 @@ exports.statusTx = (req, res, next) => {
     if(transaction){
       
       if(transaction.status==0){
-        var statustext = "Waiting for buyer funds..."
-      } 
 
+        var statustext = "Waiting for buyer funds..."
+
+      } else {
+
+        var statustext = "Waiting for buyer funds..."
+        
+      }
     var  tx= {}
 
      tx[transaction.txn_id] = {
