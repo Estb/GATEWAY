@@ -1,0 +1,27 @@
+{
+  "name": "bzlgateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bzlcoin",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "coinpayments": "^2.0.3",
+    "coinpayments-ipn": "^1.0.0",
+    "dotenv": "^8.2.0",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.16.4",
+    "http-status": "^1.3.1",
+    "jsonwebtoken": "^8.5.0",
+    "method-override": "^3.0.0",
+    "mysql2": "^1.6.4",
+    "nodemailer": "^6.3.0",
+    "sequelize": "^4.42.0"
+  }
+}
