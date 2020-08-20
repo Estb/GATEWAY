@@ -10,7 +10,7 @@
   "author": "Bzlcoin",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "coinpayments": "^2.0.3",
     "coinpayments-ipn": "^1.0.0",
